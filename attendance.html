@@ -33,9 +33,9 @@ video{width:100%;border-radius:12px;background:#000;margin-top:8px}
 <p class="mut" style="text-align:center;margin-top:18px">لا يُرسل أي بيانات بيومترية — البصمة تبقى على جهازك، ويُرسل توقيع تحقق فقط.</p>
 </div>
 <script>
-/* ECOwatt 20261203 — صفحة الموبايل للحضور. تُستضاف على HTTPS (GitHub Pages مجاناً).
+/* ECOwatt 20261206 — صفحة الموبايل للحضور (رسائل الترحيب: «إيكوواط ترحب بك» / «إيكوواط تتمنى لك السلامة»). تُستضاف على HTTPS (GitHub Pages مجاناً).
    عدّل DEFAULT_SERVER إلى رابط نشر Code.gs (ينتهي بـ /exec)، أو يصلها تلقائياً من رابط التفعيل (&s=). */
-var DEFAULT_SERVER='';
+var DEFAULT_SERVER='https://script.google.com/macros/s/AKfycbyRMkbJiuZHENZ3XUHzqRwGN8QI4-lKyUjBOYvf9TR3znsbJOTc_JB8xnZ3BaBhlYyO/exec';
 var K='ecoAtt_v1';
 var $=function(id){return document.getElementById(id);};
 function E(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -115,7 +115,8 @@ function punch(src){
   return navigator.credentials.get({publicKey:{challenge:u2b(r.challenge),rpId:r.rpId,allowCredentials:[{type:'public-key',id:u2b(r.credId)}],userVerification:'required',timeout:60000}});
  }).then(function(a){return Promise.all([gp,ip]).then(function(x){return api('m.punch.finish',{challengeId:ctx.challengeId,gps:x[0],ip:x[1],assertion:{id:a.id,clientDataJSON:b2u(a.response.clientDataJSON),authenticatorData:b2u(a.response.authenticatorData),signature:b2u(a.response.signature)}});});})
  .then(function(r){history.replaceState(null,'',location.pathname);
-  $('view').innerHTML='<div class="card res"><p class="big">'+(r.type==='IN'?'✅':'👋')+'</p><h2>'+(r.type==='IN'?'تم تسجيل الحضور':'تم تسجيل الانصراف')+'</h2><p class="big" style="font-size:34px">'+E(r.local)+'</p><p>'+E(r.name)+' — '+E(r.branch)+'</p>'+(r.flags?'<p class="mut">'+E(r.flags)+'</p>':'')+'<button class="sec" id="bk">رجوع</button></div>';$('bk').onclick=function(){home();};
+  var gr=r.greet||(r.type==='IN'?'إيكوواط ترحب بك':'إيكوواط تتمنى لك السلامة');
+  $('view').innerHTML='<div class="card res"><p class="big">'+(r.type==='IN'?'🌿':'👋')+'</p><h2 style="font-size:24px;color:var(--pri)">'+E(gr)+'</h2><h2>'+(r.type==='IN'?'✅ تم تسجيل الحضور':'✅ تم تسجيل الانصراف')+'</h2><p class="big" style="font-size:34px">'+E(r.local)+'</p><p>'+E(r.name)+' — '+E(r.branch)+'</p>'+(r.flags?'<p class="mut">'+E(r.flags)+'</p>':'')+'<button class="sec" id="bk">رجوع</button></div>';$('bk').onclick=function(){home();};
  }).catch(function(e){history.replaceState(null,'',location.pathname);home();setTimeout(function(){say(fmtErr(e));},300);});
 }
 function setPin(){var pin=$('pin').value,o=st(),btn=$('pinb');if(!/^\d{4,8}$/.test(pin)){say('الرمز من 4 إلى 8 أرقام');return;}busy(btn,true,'⏳ بانتظار البصمة…');
